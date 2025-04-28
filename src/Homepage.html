@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Bildkonzepte</title>
+    <style>
+        /* 🔹 Allgemeine Styles */
+        body { margin: 0; font-family: "Calibri Light", sans-serif; }
+
+        /* 🔹 Fixierter Header */
+        .header {
+            background: linear-gradient(to right, orange, red, purple, black);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 45px;
+            position: fixed; /* Header bleibt oben fixiert */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Höchste Priorität */
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Feste Breite */
+            height: 50px; /* Feste Höhe */
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            margin-right: 20px;
+        }
+
+        /* 🔹 Menü Overlay (jetzt fixiert und mit hoher Priorität) */
+        .menu-overlay {
+            position: fixed; /* Fixiert das Menü über dem gesamten Bildschirm */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Höchster Wert, damit es über allem liegt */
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            text-align: center;
+        }
+
+        .menu-overlay a:hover {
+            color: orange;
+        }
+
+        /* 🔹 Hero-Bereich */
+        .hero {
+            position: relative;
+            text-align: center;
+            color: white;
+            margin-top: 60px; /* Platz für fixierten Header */
+        }
+
+
+        .hero img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 🔹 Halbtransparentes Rechteck für den Titel */
+        .hero-text-container {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .hero-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        /* 🔹 Button */
+        .hero-button {
+            background: white;
+            color: black;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 20px;
+            text-decoration: none;
+            display: inline-block;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 🔹 Header -->
+<div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <div class="logo">
+        <img src="image/logo.png" alt="Logo">
+    </div>
+</div>
+
+<!-- 🔹 Menü Overlay -->
+<div class="menu-overlay" id="menu">
+    <a href="Homepage.html">Startseite</a>
+    <a href="Informationsseite.html">Informationsseite</a>
+    <a href="Bildergalerie.html">Bildergalerie</a>
+    <a href="Moodboards.html">Moodboards</a>
+    <a href="ConceptMap.html">Concept Map</a>
+</div>
+
+<!-- 🔹 Hero-Bereich -->
+<div class="hero">
+    <img src="image/hintergrund.webp" alt="Innovative Bildkonzepte">
+    <div class="hero-text-container">
+        <div class="hero-text">
+            Innovative Bildkonzepte für die Medieninformatik
+            <hr>
+            Visualisierung mit Künstlicher Intelligenz, zur gezielten Ansprache zukünftiger Studierender
+        </div>
+    </div>
+    <a href="Informationsseite.html" class="hero-button">Jetzt mehr erfahren</a>
+</div>
+
+<script>
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+    }
+
+    // Schließt das Menü, wenn außerhalb geklickt wird
+    window.onclick = function(event) {
+        let menu = document.getElementById("menu");
+        let menuIcon = document.querySelector(".menu-icon");
+        if (event.target !== menu && event.target !== menuIcon && !menu.contains(event.target)) {
+            menu.classList.remove("active");
+        }
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informationsseite</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Calibri Light", sans-serif;
+            background: #333;
+            color: white;
+            padding-top: 80px; /* Platz für den fixierten Header */
+        }
+
+        .header {
+            background: linear-gradient(to right, orange, red, purple, black);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 45px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            flex-grow: 1; /* Damit er sich ausdehnt */
+            text-align: center;
+            margin-left: -40px; /* Damit es optisch wirklich mittig ist */
+        }
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Feste Breite */
+            height: 50px; /* Feste Höhe */
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .section {
+            background: #444;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .section h2 {
+            margin: 0;
+            padding: 10px;
+            transition: color 0.3s;
+        }
+
+        .section .content {
+            display: none;
+            padding: 10px;
+        }
+
+        .section.active h2 { color: orange; }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .menu-overlay a:hover {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Ziel</h2></center>
+    <hr>
+    <div class="content">
+        <p>Ziel ist die Entwicklung eines Bildkonzepts, das zentrale Inhalte, Werte und die Innovationskraft der Medieninformatik am Campus
+          Gummersbach repräsentiert. Dabei soll künstliche Intelligenz nicht nur als technisches Werkzeug, sondern als gestalterischer Impulsgeber
+          zur visuellen Kommunikation eingesetzt werden, um insbesondere Studieninteressierte auf emotionaler und inhaltlicher Ebene anzusprechen. </p>
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Stakeholder</h2></center>
+    <hr>
+    <div class="content">
+        <p> Die Entwicklung zielgerichteter, KI-generierter Bildkonzepte zur Darstellung
+          des Studiengangs Medieninformatik erfordert eine differenzierte Auseinandersetzung mit den relevanten Stakeholdern. Diese Gruppen verfolgen unterschiedliche
+          Interessen, bringen spezifische Anforderungen an die Visualisierung mit und
+          reagieren verschieden auf gestalterische Mittel. Die nachfolgende Analyse fokussiert sich auf interne und externe Stakeholder, die im Rahmen der Gestaltung und
+          Anwendung KI-generierter Bildkonzepte im Hochschulkontext relevant sind. Ziel ist es, deren Interessen, Wirkungsbereiche sowie potenzielle Anforderungen und Risiken systematisch zu erfassen.</p>
+          <img src="image/photo-log-Ermira-Niemczyk-2025-04-27-258.png" alt="Stakeholderanalyse" width="980px">
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Bildkonzept</h2></center>
+    <hr>
+    <div class="content">
+      <img src="image/154.jpeg" alt="Lernbox der Bibliothek " width="580px">
+      <p>Ein Bildkonzept bezeichnet eine kohärente Bildserie, die auf einheitlichen Gestaltungsprinzipien basiert, wie etwa wiederkehrenden Farben, Formen oder einer definierten Bildästhetik –
+      beispielsweise abstrakt oder realistisch.
+      Dabei bleiben die grundlegenden Gestaltungsrichtlinien konstant, während sich lediglich der inhaltliche Fokus, gesteuert durch variierende Prompts, ändern kann.
+      Ein konkretes Beispiel für ein Bildkonzept:</p>
+      <p>Thema und Botschaft: Räume der TH Köln</p>
+      <p>Zielgruppe: Studieninteressierte</p>
+      <p>Stil und Ästhetik: Realistisch</p>
+      <p>Farbwelt und Formen: An den tatsächlichen Farben und Strukturen der TH Köln-Räumlichkeiten orientiert.</p>
+    </div>
+</div>
+
+
+<div class="section" onclick="toggleSection(this)">
+
+    <center><h2>Syntaktik</h2></center>
+    <hr>
+    <div class="content">
+        <p>Syntaktik befasst sich mit der formalen Anordnung von Zeichen, ihrer Struktur und Beziehung zueinander.
+          Durch die Verwendung von Künstlicher Intelligenz zur Bildgenerierung, insbesondere mittels textbasierter Prompt-Systeme, beeinflusst die gestalterische
+          Entscheidung sowohl direkt als auch indirekt die syntaktische Struktur des
+          resultierenden Bildmaterials. Die präzise Formulierung von Prompts, steuert maßgeblich, welche Gestaltungselemente in den Vordergrund treten, wie der visuelle
+          Fokus gelenkt wird und in welchem Maße eine formale Harmonie innerhalb
+          der Bildkomposition erzielt werden kann. In der KI-gestützten Bildproduktion können diese formalen Parameter zwar nicht direkt wie in klassischer Designsoftware manuell editiert werden,
+          jedoch lassen sie sich durch gezielte sprachliche Steuerung im Promptprozess beeinflussen.  </p>
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+
+    <center><h2>Semantik</h2></center>
+    <hr>
+    <div class="content">
+        <p> Um Text-to-Image-Systeme besser zu verstehen und gezielt einsetzen zu können,
+          ist es von Vorteil, die semantischen Bedeutungen zu analysieren, die durch
+          Künstliche Intelligenz erzeugt werden. Das bedeutet konkret: Was sagen die
+          eingegebenen Prompts aus, wie werden sie vom KI-System interpretiert und
+          welche visuellen Ergebnisse resultieren daraus?
+          Im Rahmen des Kommunikationsmodells von Paul Watzlawick bildet die Semantik die zweite zentrale Ebene.</p>
+
+          <img src="image/Screenshot 2025-04-18 174051.png" alt="Kommunikationsmodell nach  Watzlawick">
+
+        <p> Sie bezieht sich auf die Bedeutungsebene der Kommunikation, was Zeichen,
+          Wörter oder Prompts meinen. Ein anschauliches Beispiel ist das Programmieren
+          von Code: Auch hier überprüft man, ob die ausgeführte Aktion tatsächlich dem
+          entspricht, was ursprünglich gemeint und beabsichtigt war. </p>
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+
+    <center><h2>Pragmatik</h2></center>
+    <hr>
+    <div class="content">
+
+        <p> Im Rahmen dieses Projekts wurde ein exploratives Interviewformat entwickelt, um die pragmatische Wirkung der mit KI erzeugten Bildkonzepte zu untersuchen. Die Befragung zielte darauf ab, zu erfassen, wie die Bildwelten
+          von Interviewpartner*innen interpretiert werden, welche Emotionen sie hervorrufen und inwieweit sie als repräsentativ für das Studienfeld Medieninformatik
+          matik wahrgenommen werden. Den Teilnehmenden, unabängig davon, ob sie aktuell studieren oder nicht, wurde vorab die fiktive Perspektive eines Studieninteressierten vermittelt.</p>
+
+          <img src="image/photo-log-Ermira-Niemczyk-2025-04-27-259.png" alt="Interviewbilder" width="980px">
+          <p>Ich hatte das Glück, eine echte Studieninteressierte zu befragen. Ebenso wurde ein Medieninformatik-Studenten befragt, eine Wirtschaftsingeneurin, zur Interdisziplären Veranschaulichung und 2 weitere Personen , die keinerlei Erfahrungen mit dem Thema Medieninformatik
+            gemacht hat.
+            Im Folgenden werden die wichtigsten Erkenntnisse aus dem Interview mit einer
+            Studieninteressierten zusammenfassend dargestellt. Dabei wird auf die wörtliche
+            Wiedergabe der einzelnen Interviewfragen verzichtet, um stattdessen die inhaltlichen Aussagen und zentralen Ergebnisse der Befragung in strukturierter
+            Form zu präsentieren. Die Interviewpartnerin bringt bereits praktische Erfahrung mit, unter anderem durch ein Praktikum im Online-Marketing-Bereich.
+            Ihr Interesse an Medieninformatik ist durch diese Erfahrung weiter gewachsen.
+            Sie steht kurz vor Beginn ihres Studiums an der TH Köln, was sie zu einer idealen Vertreterin der Zielgruppe macht. Sie befindet sich im Ubergang vom beruflichen Kontext zum Studium und sucht nach Orientierung.
+            Die Interviewte beschreibt die Bilder als:
+            1. Modern
+            2. Kreativ
+            3. Farbenfroh
+            4. Technologisch geprägt
+            Sie hebt besonders die Darstellung von Teamarbeit, digitalen Tools, Programmierung und Innovation hervor. Diese Aspekte werden positiv mit der Medieninformatik assoziiert und fördern die Wirkung und Attraktivität der Studienrichtung. </p>
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Medieninformatik</h2></center>
+    <hr>
+    <div class="content">
+        <p>Zur fundierten Entwicklung eigener Bildkonzepte wurde im Rahmen des Projekts eine vergleichende Analyse bestehender visueller Darstellungen von Studiengängen im Bereich Medieninformatik durchgef¨uhrt. Dabei lag der Fokus auf
+der Frage, wie Hochschulen in Deutschland, exemplarisch etwa die Hochschule Hof, Inhalte der Medieninformatik visuell kommunizieren und aufbereiten. </p>
+
+<img src="image/m1.png" alt="Hochschule Hof" width="980px">
+
+<p> Wenn sie sich noch mehr über die Moodboards interessieren, können sie im Menüpunkt Moodboards, die Hochschulen in Deutschland, die Medieninformatik anbietet, ansehen. </p>
+<p>Die gesammelten Materialien wurden in Form von Moodboards systematisiert, um
+wiederkehrende gestalterische Prinzipien, semantische Bildsprachen, sowie thematische Schwerpunkte zu identifizieren. Diese Moodboards dienten nicht nur
+für die Inspiration, sondern fungierten auch als visuelles Referenzsystem für die
+Entwicklung eigener KI-generierter Bildkonzepte. Sie machen deutlich, welche
+ästhetischen Codes bereits etabliert sind und wie Themen wie Digitalisierung,
+Kreativität, Technologie oder Teamarbeit visuell übersetzt werden. Darüber
+hinaus erlauben sie Rückschlüsse auf die Zielgruppenansprache und geben Aufschluss darüber, welche visuellen Narrative im Hochschulmarketing besonders
+präsent sind. Die Integration dieser Moodboards in das eigene Projekt trägt
+daher maßgeblich zur Qualitätssicherung der entwickelten Konzepte bei. Sie
+erlauben es, bestehende Gestaltungsansätze zu reflektieren und kritisch zu hinterfragen</p>
+    </div>
+</div>
+
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Text-To-Image</h2></center>
+    <hr>
+    <div class="content">
+        <p>Es gibt vier zentrale Phasen, die den Übergang
+von einem narrativen oder beschreibenden Text hin zu einem durch künstliche
+Intelligenz erzeugten Bild systematisch abbildet. Ausgehend von einer semantischen Analyse des Ursprungstextes wird in einem ersten Schritt eine textuelle
+Synthese vorgenommen, um bildrelevante Deskriptoren und Schlüsselbegriffe zu
+identifizieren. Diese bilden die Grundlage f¨ur die Konstruktion eines sogenannten Prompts, einer sprachlich codierten Eingabe, welche die gestalterischen
+Parameter für das neuronale Netz definiert. In einem dritten Schritt wird
+dieser Prompt in ein Text-to-Image-Modell eingespeist und unter Berücksichtigung spezifischer Netzeinstellungen weiterverarbeitet. Abschließend erfolgt
+die Evaluierung des generierten Bildes hinsichtlich seiner Übereinstimmung mit
+der ursprünglichen Textintention. Bei unzureichender inhaltlicher oder gestalterischer Adäquatheit wird der Prozess rekursiv wiederholt und der Prompt
+entsprechend angepasst. Dieser strukturierte Ansatz vereint linguistische, semantische und technologische Komponenten zu einem integrativen Modell, das
+sich insbesondere für den Einsatz im kulturwissenschaftlichen, designorientierten
+und edukativen Kontext eignet, etwa zur Visualisierung abstrakter oder historischer Inhalte für spezifische Zielgruppen. Auch im Rahmen dieser Arbeit
+dient dieses Modell als methodische Grundlage zur Entwicklung und Analyse
+KI-generierter Bildkonzepte im Kontext der Medieninformatik.(Miele, Pelliccio, and Saccucci 2023)</p>
+    </div>
+</div>
+
+<div class="section" onclick="toggleSection(this)">
+    <center><h2>Urheberrechte der Bilder</h2></center>
+    <hr>
+    <div class="content">
+        <p>Es stellt sich die Frage, wem die Rechte an den durch KI-Tools generierten
+Bildern zustehen. Obwohl durch KI-Modelle eigenständig Bilder erschaffen werden, handelt es sich bei diesen Systemen nicht um rechtsfähige Entitäten der
+realen Welt. Das bedeutet, dass KI-Tools weder Verträge schließen noch Urheberrechte im juristischen Sinne beanspruchen können. Auch die Personen, die
+die Prompts füür die Generierung erstellen, erhalten grundsätzlich kein Urheberrecht an den entstandenen Bildern. Sie haben lediglich Einfluss auf den
+eingegebenen Text, der wiederum die Grundlage für die Bildkreation bildet.
+Daraus folgt, dass die durch KI-gestützte Systeme erzeugten Werke bislang weitgehend als nicht urheberrechtsfähig eingestuft werden.</p>
+  </div>
+</div>
+
+
+<div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <span class="header-title">Informationen</span>
+    <div class="logo">
+        <img src="image/logo.png" alt="Logo">
+    </div>
+</div>
+
+<div class="menu-overlay" id="menu">
+    <a href="Homepage.html">Startseite</a>
+    <a href="Informationsseite.html">Informationsseite</a>
+    <a href="Bildergalerie.html">Bildergalerie</a>
+    <a href="Moodboards.html">Moodboards</a>
+    <a href="ConceptMap.html">Concept Map</a>
+</div>
+
+<script>
+    function toggleSection(element) {
+        let content = element.querySelector('.content');
+        let isActive = element.classList.contains('active');
+
+        document.querySelectorAll('.section').forEach(sec => {
+            sec.classList.remove('active');
+            sec.querySelector('.content').style.display = 'none';
+        });
+
+        if (!isActive) {
+            element.classList.add('active');
+            content.style.display = 'block';
+        }
+    }
+
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+    }
+
+    window.onclick = function(event) {
+        let menu = document.getElementById("menu");
+        let menuIcon = document.querySelector(".menu-icon");
+        if (event.target !== menu && event.target !== menuIcon && !menu.contains(event.target)) {
+            menu.classList.remove("active");
+        }
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bildergalerie</title>
+
+    <style>
+        body { font-family: "Calibri Light", sans-serif; text-align: center; margin: 0; color: black; padding: 70px; background: #333333}
+        .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px }
+        .gallery img { width: 100%; cursor: pointer; border-radius: 5px; }
+
+        /* 🔹 Fixierter Header */
+        .header {
+            background: linear-gradient(to right, orange, red, purple, black);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 45px;
+            position: fixed; /* Header bleibt oben fixiert */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Höchste Priorität */
+        }
+
+
+        /* 🔹 Titel mittig */
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            flex-grow: 1; /* Damit er sich ausdehnt */
+            text-align: center;
+            margin-left: -40px; /* Damit es optisch wirklich mittig ist */
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Feste Breite */
+            height: 50px; /* Feste Höhe */
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+            padding-right: 20px;
+        }
+
+        .logo {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 🔹 Menü Overlay (jetzt fixiert und mit hoher Priorität) */
+        .menu-overlay {
+            position: fixed; /* Fixiert das Menü über dem gesamten Bildschirm */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Höchster Wert, damit es über allem liegt */
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .menu-overlay a:hover {
+            color: orange;
+        }
+
+        /* 🔹 Lightbox-Stil */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Dunkelgrauer transparenter Hintergrund */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        /* 🔹 Bild in der Lightbox */
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+
+        /* 🔹 Beschreibung neben dem Bild */
+        .lightbox .caption {
+            color: white;
+            font-size: 18px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* 🔹 Schließen-Button */
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 🔹 Navigation (Pfeile) */
+        .lightbox .prev, .lightbox .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .lightbox .prev { left: 20px; }
+        .lightbox .next { right: 20px; }
+
+        .lightbox .prev:hover, .lightbox .next:hover {
+            color: orange;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <span class="header-title">Bildergalerie</span>
+    <div class="logo">
+        <img src="image/logo.png" alt="Logo">
+    </div>
+</div>
+
+<!-- 🔹 Menü Overlay -->
+<div class="menu-overlay" id="menu">
+    <a href="Homepage.html">Startseite</a>
+    <a href="Informationsseite.html">Informationsseite</a>
+    <a href="Bildergalerie.html">Bildergalerie</a>
+    <a href="Moodboards.html">Moodboards</a>
+    <a href="ConceptMap.html">Concept Map</a>
+</div>
+
+
+<!--  Lightbox -->
+<div class="lightbox" id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+
+    <div class="lightbox-content">
+        <div class="caption" id="caption"></div>
+        <img id="lightbox-img" src="">
+    </div>
+
+    <span class="next" onclick="changeImage(1)">&#10095;</span>
+</div>
+
+
+<div class="gallery" id="gallery">
+    <!-- Bilder -->
+    <img src="image/1.jpeg" alt="TH Köln, Bibliothek, lernen 1/4">
+    <img src="image/2.jpeg" alt="TH Köln, Bibliothek, lernen 2/4">
+    <img src="image/3.jpeg" alt="TH Köln, Bibliothek, lernen 3/4">
+    <img src="image/4.jpeg" alt="TH Köln, Bibliothek, lernen 4/4">
+
+    <img src="image/11.jpeg" alt="Technisch, programmiert, bunt 1/4" >
+    <img src="image/12.jpeg" alt="Technisch, programmiert, bunt 2/4" >
+    <img src="image/7.jpeg" alt="Technisch, programmiert, bunt 3/4" >
+    <img src="image/8.jpeg" alt="Technisch, programmiert, bunt 4/4" >
+
+    <img src="image/5.jpeg" alt="Virtuelle Welt, orange, lila, rot 1/4">
+    <img src="image/6.jpeg" alt="Virtuelle Welt, orange, lila, rot 2/4" >
+    <img src="image/9.jpeg" alt="Virtuelle Welt, orange, lila, rot 3/4" >
+    <img src="image/10.jpeg" alt="Virtuelle Welt, orange, lila, rot 4/4">
+
+    <img src="image/164.jpeg" alt="Visuelles Denken ist eine kreative Methode, um komplexe Informationen auf verständliche und ansprechende Weise zu verarbeiten. Es ist besonders nützlich in der Teamarbeit, da es die Kommunikation und das Verständnis zwischen den Teammitgliedern fördert. Abstraktes Bild. 1/4" >
+    <img src="image/165.jpeg" alt="Visuelles Denken ist eine kreative Methode, um komplexe Informationen auf verständliche und ansprechende Weise zu verarbeiten. Es ist besonders nützlich in der Teamarbeit, da es die Kommunikation und das Verständnis zwischen den Teammitgliedern fördert. Abstraktes Bild. 2/4" >
+    <img src="image/166.jpeg" alt="Visuelles Denken ist eine kreative Methode, um komplexe Informationen auf verständliche und ansprechende Weise zu verarbeiten. Es ist besonders nützlich in der Teamarbeit, da es die Kommunikation und das Verständnis zwischen den Teammitgliedern fördert. Abstraktes Bild. 3/4" >
+    <img src="image/167.jpeg" alt="Visuelles Denken ist eine kreative Methode, um komplexe Informationen auf verständliche und ansprechende Weise zu verarbeiten. Es ist besonders nützlich in der Teamarbeit, da es die Kommunikation und das Verständnis zwischen den Teammitgliedern fördert. Abstraktes Bild. 4/4" >
+
+    <img src="image/13.jpeg" alt="Ein futuristischer Computer-Chip, der von leuchtenden Datenströmen umgeben ist, mit einer modernen Benutzeroberfläche im Hintergrund. 1/4" >
+    <img src="image/14.jpeg" alt="Ein futuristischer Computer-Chip, der von leuchtenden Datenströmen umgeben ist, mit einer modernen Benutzeroberfläche im Hintergrund. 2/4" >
+    <img src="image/15.jpeg" alt="Ein futuristischer Computer-Chip, der von leuchtenden Datenströmen umgeben ist, mit einer modernen Benutzeroberfläche im Hintergrund. 3/4">
+    <img src="image/16.jpeg" alt="Ein futuristischer Computer-Chip, der von leuchtenden Datenströmen umgeben ist, mit einer modernen Benutzeroberfläche im Hintergrund. 4/4" >
+
+    <img src="image/17.jpeg" alt="Ein Bildschirm, der mit verschiedenen Programmiersprachen gefüllt ist, während ein Entwickler konzentriert daran arbeitet, umgeben von Diagrammen und Flowcharts. 1/4" >
+    <img src="image/18.jpeg" alt="Ein Bildschirm, der mit verschiedenen Programmiersprachen gefüllt ist, während ein Entwickler konzentriert daran arbeitet, umgeben von Diagrammen und Flowcharts. 2/4" >
+    <img src="image/19.jpeg" alt="Ein Bildschirm, der mit verschiedenen Programmiersprachen gefüllt ist, während ein Entwickler konzentriert daran arbeitet, umgeben von Diagrammen und Flowcharts. 3/4" >
+    <img src="image/20.jpeg" alt="Ein Bildschirm, der mit verschiedenen Programmiersprachen gefüllt ist, während ein Entwickler konzentriert daran arbeitet, umgeben von Diagrammen und Flowcharts. 4/4" >
+
+    <img src="image/150.jpeg" alt="Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 1/4">
+    <img src="image/151.jpeg" alt="Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 2/4" >
+    <img src="image/152.jpeg" alt="Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 3/4" >
+    <img src="image/157.jpeg" alt="Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 4/4" >
+
+    <img src="image/158.jpeg" alt="In einer modernen Arbeitsumgebung ist die Zusammenarbeit in Teams unerlässlich, insbesondere bei der Entwicklung von Softwareprojekten. Ein Team bestehend aus vier Mitgliedern trifft sich regelmäßig an einem Tisch, ausgestattet mit Laptops. 1/4" >
+    <img src="image/159.jpeg" alt="In einer modernen Arbeitsumgebung ist die Zusammenarbeit in Teams unerlässlich, insbesondere bei der Entwicklung von Softwareprojekten. Ein Team bestehend aus vier Mitgliedern trifft sich regelmäßig an einem Tisch, ausgestattet mit Laptops. 2/4" >
+    <img src="image/160.jpeg" alt="In einer modernen Arbeitsumgebung ist die Zusammenarbeit in Teams unerlässlich, insbesondere bei der Entwicklung von Softwareprojekten. Ein Team bestehend aus vier Mitgliedern trifft sich regelmäßig an einem Tisch, ausgestattet mit Laptops. 3/4" >
+    <img src="image/161.jpeg" alt="In einer modernen Arbeitsumgebung ist die Zusammenarbeit in Teams unerlässlich, insbesondere bei der Entwicklung von Softwareprojekten. Ein Team bestehend aus vier Mitgliedern trifft sich regelmäßig an einem Tisch, ausgestattet mit Laptops. 4/4">
+
+    <img src="image/21.jpeg" alt="Ein neuronales Netzwerk, das in einem 3D-Raum visualisiert wird, mit Datenpunkten, die sich dynamisch bewegen, um den Lernprozess zu zeigen. 1/4" >
+    <img src="image/22.jpeg" alt="Ein neuronales Netzwerk, das in einem 3D-Raum visualisiert wird, mit Datenpunkten, die sich dynamisch bewegen, um den Lernprozess zu zeigen. 2/4" >
+    <img src="image/23.jpeg" alt="Ein neuronales Netzwerk, das in einem 3D-Raum visualisiert wird, mit Datenpunkten, die sich dynamisch bewegen, um den Lernprozess zu zeigen. 3/4" >
+    <img src="image/24.jpeg" alt="Ein neuronales Netzwerk, das in einem 3D-Raum visualisiert wird, mit Datenpunkten, die sich dynamisch bewegen, um den Lernprozess zu zeigen. 4/4" >
+
+    <img src="image/25.jpeg" alt="Ein Designer arbeitet an einem interaktiven Prototypen auf einem Tablet, umgeben von Design-Notizen und kreativen Skizzen. 1/4" >
+    <img src="image/26.jpeg" alt="Ein Designer arbeitet an einem interaktiven Prototypen auf einem Tablet, umgeben von Design-Notizen und kreativen Skizzen. 2/4" >
+    <img src="image/27.jpeg" alt="Ein Designer arbeitet an einem interaktiven Prototypen auf einem Tablet, umgeben von Design-Notizen und kreativen Skizzen. 3/4" >
+    <img src="image/28.jpeg" alt="Ein Designer arbeitet an einem interaktiven Prototypen auf einem Tablet, umgeben von Design-Notizen und kreativen Skizzen. 4/4" >
+
+    <img src="image/29.jpeg" alt="Eine digitale Stadt mit vernetzten IoT-Geräten, die Informationen austauschen, dargestellt durch Lichtstrahlen, die zwischen den Geräten fließen. 1/4" >
+    <img src="image/30.jpeg" alt="Eine digitale Stadt mit vernetzten IoT-Geräten, die Informationen austauschen, dargestellt durch Lichtstrahlen, die zwischen den Geräten fließen. 2/4" >
+    <img src="image/31.jpeg" alt="Eine digitale Stadt mit vernetzten IoT-Geräten, die Informationen austauschen, dargestellt durch Lichtstrahlen, die zwischen den Geräten fließen. 3/4" >
+    <img src="image/32.jpeg" alt="Eine digitale Stadt mit vernetzten IoT-Geräten, die Informationen austauschen, dargestellt durch Lichtstrahlen, die zwischen den Geräten fließen. 4/4" >
+
+    <img src="image/33.jpeg" alt="Ein kreatives Studio mit einer Kamera, Mikrofonen und Computerbildschirmen, auf denen digitale Film- und Audioproduktionen bearbeitet werden. 1/4" >
+    <img src="image/34.jpeg" alt="Ein kreatives Studio mit einer Kamera, Mikrofonen und Computerbildschirmen, auf denen digitale Film- und Audioproduktionen bearbeitet werden. 2/4" >
+    <img src="image/35.jpeg" alt="Ein kreatives Studio mit einer Kamera, Mikrofonen und Computerbildschirmen, auf denen digitale Film- und Audioproduktionen bearbeitet werden. 3/4" >
+    <img src="image/36.jpeg" alt="Ein kreatives Studio mit einer Kamera, Mikrofonen und Computerbildschirmen, auf denen digitale Film- und Audioproduktionen bearbeitet werden. 4/4">
+
+    <img src="image/37.jpeg" alt="Ein Künstler, der digitale Kunst mit generativen Algorithmen erstellt, umgeben von bunten, sich bewegenden Mustern. 1/4" >
+    <img src="image/38.jpeg" alt="Ein Künstler, der digitale Kunst mit generativen Algorithmen erstellt, umgeben von bunten, sich bewegenden Mustern. 2/4" >
+    <img src="image/39.jpeg" alt="Ein Künstler, der digitale Kunst mit generativen Algorithmen erstellt, umgeben von bunten, sich bewegenden Mustern. 3/4" >
+    <img src="image/40.jpeg" alt="Ein Künstler, der digitale Kunst mit generativen Algorithmen erstellt, umgeben von bunten, sich bewegenden Mustern. 4/4" >
+
+    <img src="image/41.jpeg" alt="Eine Visualisierung von Benutzerinteraktionen und Übergängen zwischen Bildschirmen, mit fließenden Linien und Animationen, die den nahtlosen Übergang von einem Bildschirm zum nächsten darstellen. 1/4" >
+    <img src="image/42.jpeg" alt="Eine Visualisierung von Benutzerinteraktionen und Übergängen zwischen Bildschirmen, mit fließenden Linien und Animationen, die den nahtlosen Übergang von einem Bildschirm zum nächsten darstellen. 2/4" >
+    <img src="image/43.jpeg" alt="Eine Visualisierung von Benutzerinteraktionen und Übergängen zwischen Bildschirmen, mit fließenden Linien und Animationen, die den nahtlosen Übergang von einem Bildschirm zum nächsten darstellen. 3/4" >
+    <img src="image/44.jpeg" alt="Eine Visualisierung von Benutzerinteraktionen und Übergängen zwischen Bildschirmen, mit fließenden Linien und Animationen, die den nahtlosen Übergang von einem Bildschirm zum nächsten darstellen. 4/4" >
+
+    <img src="image/45.jpeg" alt = "Ein Designer erstellt ein Interface-Inventar, das aus Modulen wie Buttons, Input-Feldern und Icons besteht, alle in einem organisierten Raster auf einem großen Bildschirm angezeigt. 1/4" />
+    <img src="image/46.jpeg" alt = "Ein Designer erstellt ein Interface-Inventar, das aus Modulen wie Buttons, Input-Feldern und Icons besteht, alle in einem organisierten Raster auf einem großen Bildschirm angezeigt. 2/4" />
+    <img src="image/47.jpeg" alt = "Ein Designer erstellt ein Interface-Inventar, das aus Modulen wie Buttons, Input-Feldern und Icons besteht, alle in einem organisierten Raster auf einem großen Bildschirm angezeigt. 3/4" />
+    <img src="image/48.jpeg" alt = "Ein Designer erstellt ein Interface-Inventar, das aus Modulen wie Buttons, Input-Feldern und Icons besteht, alle in einem organisierten Raster auf einem großen Bildschirm angezeigt. 4/4" />
+
+    <img src="image/73.jpeg" alt = "Ein UI-Designer entwickelt ein responsives Design und testet es auf verschiedenen Endgeräten wie Smartphones, Tablets und Desktops, die nebeneinander auf einem Schreibtisch stehen. 1/4" />
+    <img src="image/74.jpeg" alt = "Ein UI-Designer entwickelt ein responsives Design und testet es auf verschiedenen Endgeräten wie Smartphones, Tablets und Desktops, die nebeneinander auf einem Schreibtisch stehen. 2/4" />
+    <img src="image/75.jpeg" alt = "Ein UI-Designer entwickelt ein responsives Design und testet es auf verschiedenen Endgeräten wie Smartphones, Tablets und Desktops, die nebeneinander auf einem Schreibtisch stehen. 3/4" />
+    <img src="image/76.jpeg" alt = "Ein UI-Designer entwickelt ein responsives Design und testet es auf verschiedenen Endgeräten wie Smartphones, Tablets und Desktops, die nebeneinander auf einem Schreibtisch stehen. 4/4" />
+
+    <img src="image/77.jpeg" alt = "Ein Designer erstellt Wireframes auf einem Tablet und einem Laptop, die das grundlegende Layout und die Struktur einer Webseite für Desktop und mobile Geräte zeigen. 1/4" />
+    <img src="image/78.jpeg" alt = "Ein Designer erstellt Wireframes auf einem Tablet und einem Laptop, die das grundlegende Layout und die Struktur einer Webseite für Desktop und mobile Geräte zeigen. 2/4" />
+    <img src="image/79.jpeg" alt = "Ein Designer erstellt Wireframes auf einem Tablet und einem Laptop, die das grundlegende Layout und die Struktur einer Webseite für Desktop und mobile Geräte zeigen. 3/4" />
+    <img src="image/80.jpeg" alt = "Ein Designer erstellt Wireframes auf einem Tablet und einem Laptop, die das grundlegende Layout und die Struktur einer Webseite für Desktop und mobile Geräte zeigen. 4/4" />
+
+    <img src="image/81.jpeg" alt = "Ein Designteam plant ein Projekt, arbeitet an einem großen Whiteboard mit Notizen und Diagrammen, die den Designprozess und die Schritte zur Projektdurchführung strukturieren. 1/4" />
+    <img src="image/82.jpeg" alt = "Ein Designteam plant ein Projekt, arbeitet an einem großen Whiteboard mit Notizen und Diagrammen, die den Designprozess und die Schritte zur Projektdurchführung strukturieren. 2/4" />
+    <img src="image/83.jpeg" alt = "Ein Designteam plant ein Projekt, arbeitet an einem großen Whiteboard mit Notizen und Diagrammen, die den Designprozess und die Schritte zur Projektdurchführung strukturieren. 3/4" />
+    <img src="image/84.jpeg" alt = "Ein Designteam plant ein Projekt, arbeitet an einem großen Whiteboard mit Notizen und Diagrammen, die den Designprozess und die Schritte zur Projektdurchführung strukturieren. 4/4" />
+
+    <img src="image/85.jpeg" alt = "Ein Team von Designern bespricht Designkonzepte in einer Gruppe, betrachtet verschiedene Layouts und bewertet ihre Effektivität anhand visueller Kriterien und Bewertungstabellen. 1/4" />
+    <img src="image/86.jpeg" alt = "Ein Team von Designern bespricht Designkonzepte in einer Gruppe, betrachtet verschiedene Layouts und bewertet ihre Effektivität anhand visueller Kriterien und Bewertungstabellen. 2/4" />
+    <img src="image/87.jpeg" alt = "Ein Team von Designern bespricht Designkonzepte in einer Gruppe, betrachtet verschiedene Layouts und bewertet ihre Effektivität anhand visueller Kriterien und Bewertungstabellen. 3/4" />
+    <img src="image/88.jpeg" alt = "Ein Team von Designern bespricht Designkonzepte in einer Gruppe, betrachtet verschiedene Layouts und bewertet ihre Effektivität anhand visueller Kriterien und Bewertungstabellen. 4/4" />
+
+    <img src="image/162.jpeg" alt = "Im Entwicklungsprozess von Software und Algorithmen spielt Pseudocode eine entscheidende Rolle. Ein Team sitzt an einem Schreibtisch mit einem Weißen Plakat drauf, visualisiert mit Pseudocode. 4/4" >
+    <img src="image/163.jpeg" alt = "Im Entwicklungsprozess von Software und Algorithmen spielt Pseudocode eine entscheidende Rolle. Ein Team sitzt an einem Schreibtisch mit einem Weißen Plakat drauf, visualisiert mit Pseudocode. 4/4" >
+    <img src="image/164.jpeg" alt = "Im Entwicklungsprozess von Software und Algorithmen spielt Pseudocode eine entscheidende Rolle. Ein Team sitzt an einem Schreibtisch mit einem Weißen Plakat drauf, visualisiert mit Pseudocode. 4/4" >
+    <img src="image/165.jpeg" alt = "Im Entwicklungsprozess von Software und Algorithmen spielt Pseudocode eine entscheidende Rolle. Ein Team sitzt an einem Schreibtisch mit einem Weißen Plakat drauf, visualisiert mit Pseudocode. 4/4" >
+
+    <img src="image/89.jpeg" alt = "Ein Bildschirm mit mehreren Varianten eines Designentwurfs, wobei verschiedene Farben, Formen und Stile ausprobiert werden, um die optimale Version zu finden. 1/4" >
+    <img src="image/90.jpeg" alt = "Ein Bildschirm mit mehreren Varianten eines Designentwurfs, wobei verschiedene Farben, Formen und Stile ausprobiert werden, um die optimale Version zu finden. 2/4" >
+    <img src="image/91.jpeg" alt = "Ein Bildschirm mit mehreren Varianten eines Designentwurfs, wobei verschiedene Farben, Formen und Stile ausprobiert werden, um die optimale Version zu finden. 3/4" >
+    <img src="image/92.jpeg" alt = "Ein Bildschirm mit mehreren Varianten eines Designentwurfs, wobei verschiedene Farben, Formen und Stile ausprobiert werden, um die optimale Version zu finden. 4/4" >
+
+    <img src="image/93.jpeg" alt = "Eine Tafel mit grundlegenden mathematischen Gleichungen und Formeln, wie Addition, Subtraktion, Multiplikation und Division, die sauber und ordentlich geschrieben sind. 1/4" >
+    <img src="image/94.jpeg" alt = "Eine Tafel mit grundlegenden mathematischen Gleichungen und Formeln, wie Addition, Subtraktion, Multiplikation und Division, die sauber und ordentlich geschrieben sind. 2/4" >
+    <img src="image/95.jpeg" alt = "Eine Tafel mit grundlegenden mathematischen Gleichungen und Formeln, wie Addition, Subtraktion, Multiplikation und Division, die sauber und ordentlich geschrieben sind. 3/4" >
+    <img src="image/96.jpeg" alt = "Eine Tafel mit grundlegenden mathematischen Gleichungen und Formeln, wie Addition, Subtraktion, Multiplikation und Division, die sauber und ordentlich geschrieben sind. 4/4" >
+
+    <img src="image/97.jpeg" alt = "Eine visuelle Darstellung einer Zahlenfolge, die sich in einem bestimmten Muster wiederholt, mit einzelnen Gliedern, die in einem Diagramm oder auf einer Linie angeordnet sind. 1/4" >
+    <img src="image/98.jpeg" alt = "Eine visuelle Darstellung einer Zahlenfolge, die sich in einem bestimmten Muster wiederholt, mit einzelnen Gliedern, die in einem Diagramm oder auf einer Linie angeordnet sind. 2/4" >
+    <img src="image/99.jpeg" alt = "Eine visuelle Darstellung einer Zahlenfolge, die sich in einem bestimmten Muster wiederholt, mit einzelnen Gliedern, die in einem Diagramm oder auf einer Linie angeordnet sind. 3/4" >
+    <img src="image/100.jpeg" alt = "Eine visuelle Darstellung einer Zahlenfolge, die sich in einem bestimmten Muster wiederholt, mit einzelnen Gliedern, die in einem Diagramm oder auf einer Linie angeordnet sind. 4/4" >
+
+    <img src="image/101.jpeg" alt = "Ein Graph mit einer mathematischen Funktion, bei der eine Kurve auf einem Koordinatensystem dargestellt ist, einschließlich der x- und y-Achsen, mit einem Fokus auf die Veränderung der Funktion über die Zeit. 1/4" >
+    <img src="image/102.jpeg" alt = "Ein Graph mit einer mathematischen Funktion, bei der eine Kurve auf einem Koordinatensystem dargestellt ist, einschließlich der x- und y-Achsen, mit einem Fokus auf die Veränderung der Funktion über die Zeit. 2/4" >
+    <img src="image/103.jpeg" alt = "Ein Graph mit einer mathematischen Funktion, bei der eine Kurve auf einem Koordinatensystem dargestellt ist, einschließlich der x- und y-Achsen, mit einem Fokus auf die Veränderung der Funktion über die Zeit. 3/4" >
+    <img src="image/104.jpeg" alt = "Ein Graph mit einer mathematischen Funktion, bei der eine Kurve auf einem Koordinatensystem dargestellt ist, einschließlich der x- und y-Achsen, mit einem Fokus auf die Veränderung der Funktion über die Zeit. 4/4" >
+
+    <img src="image/105.jpeg" alt = "Eine Darstellung der Ableitung einer Funktion mit einem Graphen, der eine Tangentenlinie zeigt, die an einem bestimmten Punkt der Kurve verläuft, und der visuellen Erklärung der Steigung. 1/4" >
+    <img src="image/106.jpeg" alt = "Eine Darstellung der Ableitung einer Funktion mit einem Graphen, der eine Tangentenlinie zeigt, die an einem bestimmten Punkt der Kurve verläuft, und der visuellen Erklärung der Steigung. 2/4" >
+    <img src="image/107.jpeg" alt = "Eine Darstellung der Ableitung einer Funktion mit einem Graphen, der eine Tangentenlinie zeigt, die an einem bestimmten Punkt der Kurve verläuft, und der visuellen Erklärung der Steigung. 3/4" >
+    <img src="image/108.jpeg" alt = "Eine Darstellung der Ableitung einer Funktion mit einem Graphen, der eine Tangentenlinie zeigt, die an einem bestimmten Punkt der Kurve verläuft, und der visuellen Erklärung der Steigung. 4/4" >
+
+    <img src="image/109.jpeg" alt = "Ein Graph mit einer Fläche unter einer Kurve, die das Integral darstellt, und eine Integration, die als schraffierter Bereich zwischen der Kurve und der x-Achse visualisiert wird. 1/4" >
+    <img src="image/110.jpeg" alt = "Ein Graph mit einer Fläche unter einer Kurve, die das Integral darstellt, und eine Integration, die als schraffierter Bereich zwischen der Kurve und der x-Achse visualisiert wird. 2/4" >
+    <img src="image/111.jpeg" alt = "Ein Graph mit einer Fläche unter einer Kurve, die das Integral darstellt, und eine Integration, die als schraffierter Bereich zwischen der Kurve und der x-Achse visualisiert wird. 3/4" >
+    <img src="image/112.jpeg" alt = "Ein Graph mit einer Fläche unter einer Kurve, die das Integral darstellt, und eine Integration, die als schraffierter Bereich zwischen der Kurve und der x-Achse visualisiert wird. 4/4" >
+
+    <img src="image/145.jpeg" alt = "Ein dreidimensionaler Vektorraum, der verschiedene Vektoren darstellt, die von der Null ausgehen und in verschiedene Richtungen zeigen, begleitet von Matrizen, die Transformationen visualisieren. 1/4" >
+    <img src="image/146.jpeg" alt = "Ein dreidimensionaler Vektorraum, der verschiedene Vektoren darstellt, die von der Null ausgehen und in verschiedene Richtungen zeigen, begleitet von Matrizen, die Transformationen visualisieren. 1/4" >
+    <img src="image/147.jpeg" alt = "Ein dreidimensionaler Vektorraum, der verschiedene Vektoren darstellt, die von der Null ausgehen und in verschiedene Richtungen zeigen, begleitet von Matrizen, die Transformationen visualisieren. 1/4" >
+    <img src="image/148.jpeg" alt = "Ein dreidimensionaler Vektorraum, der verschiedene Vektoren darstellt, die von der Null ausgehen und in verschiedene Richtungen zeigen, begleitet von Matrizen, die Transformationen visualisieren. 1/4" >
+
+    <img src="image/113.jpeg" alt = "Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen.1/4" >
+    <img src="image/114.jpeg" alt = "Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 2/4" >
+    <img src="image/115.jpeg" alt = "Ein auf einem Bildschirm dargestellter Pseudo-Code, der einfache und verständliche Anweisungen in einer Mischung aus Code und Klartext zeigt, um den Ablauf eines Algorithmus darzustellen. 3/4" >
+    <img src="image/116.jpeg" alt = "Ein dreidimensionaler Vektorraum, der verschiedene Vektoren darstellt, die von der Null ausgehen und in verschiedene Richtungen zeigen, begleitet von Matrizen, die Transformationen visualisieren. 4/4" >
+
+    <img src="image/117.jpeg" alt = "In der modernen Forschung und Entwicklung ist die Benutzermodellierung ein zentraler Bestandteil interdisziplinärer Ansätze. Zeige ein interdisziplinäres Team am Schreibtisch, umgeben von Post-its 1/4" >
+    <img src="image/118.jpeg" alt = "In der modernen Forschung und Entwicklung ist die Benutzermodellierung ein zentraler Bestandteil interdisziplinärer Ansätze. Zeige ein interdisziplinäres Team am Schreibtisch, umgeben von Post-its 2/4" >
+    <img src="image/119.jpeg" alt = "In der modernen Forschung und Entwicklung ist die Benutzermodellierung ein zentraler Bestandteil interdisziplinärer Ansätze. Zeige ein interdisziplinäres Team am Schreibtisch, umgeben von Post-its 3/4" >
+    <img src="image/120.jpeg" alt = "In der modernen Forschung und Entwicklung ist die Benutzermodellierung ein zentraler Bestandteil interdisziplinärer Ansätze. Zeige ein interdisziplinäres Team am Schreibtisch, umgeben von Post-its 4/4" >
+
+    <img src="image/121.jpeg" alt = "Im Rahmen eines kreativen Arbeitsprozesses ist Prototyping und Sketching von entscheidender Bedeutung. In einem modernen Büro oder Innovationsraum versammelt sich eine Gruppe von Fachleuten. 1/4" >
+    <img src="image/122.jpeg" alt = "Im Rahmen eines kreativen Arbeitsprozesses ist Prototyping und Sketching von entscheidender Bedeutung. In einem modernen Büro oder Innovationsraum versammelt sich eine Gruppe von Fachleuten. 2/4" >
+    <img src="image/123.jpeg" alt = "Im Rahmen eines kreativen Arbeitsprozesses ist Prototyping und Sketching von entscheidender Bedeutung. In einem modernen Büro oder Innovationsraum versammelt sich eine Gruppe von Fachleuten. 3/4" >
+    <img src="image/124.jpeg" alt = "Im Rahmen eines kreativen Arbeitsprozesses ist Prototyping und Sketching von entscheidender Bedeutung. In einem modernen Büro oder Innovationsraum versammelt sich eine Gruppe von Fachleuten. 4/4" >
+
+    <img src="image/125.jpeg" alt = "Im Kontext der kognitionspsychologischen Grundlagen ist es von entscheidender Bedeutung, den Studierenden ein umfassendes Verständnis über die Funktionen und Prozesse des menschlichen Denkens zu vermitteln. Der Dozent hält eine Vorlesung über das Thema 1/4" >
+    <img src="image/126.jpeg" alt = "Im Kontext der kognitionspsychologischen Grundlagen ist es von entscheidender Bedeutung, den Studierenden ein umfassendes Verständnis über die Funktionen und Prozesse des menschlichen Denkens zu vermitteln. Der Dozent hält eine Vorlesung über das Thema 2/4" >
+    <img src="image/127.jpeg" alt = "Im Kontext der kognitionspsychologischen Grundlagen ist es von entscheidender Bedeutung, den Studierenden ein umfassendes Verständnis über die Funktionen und Prozesse des menschlichen Denkens zu vermitteln. Der Dozent hält eine Vorlesung über das Thema 3/4" >
+    <img src="image/128.jpeg" alt = "Im Kontext der kognitionspsychologischen Grundlagen ist es von entscheidender Bedeutung, den Studierenden ein umfassendes Verständnis über die Funktionen und Prozesse des menschlichen Denkens zu vermitteln. Der Dozent hält eine Vorlesung über das Thema 4/4" >
+
+    <img src="image/141.jpeg" alt = "Eine detaillierte Datenbankstruktur mit Tabellen und Beziehungen zwischen ihnen, die als ER-Diagramm (Entity-Relationship-Diagramm) dargestellt ist, mit klaren Linien, die die Datenmodelle verbinden.1/4" >
+    <img src="image/142.jpeg" alt = "Eine detaillierte Datenbankstruktur mit Tabellen und Beziehungen zwischen ihnen, die als ER-Diagramm (Entity-Relationship-Diagramm) dargestellt ist, mit klaren Linien, die die Datenmodelle verbinden.2/4" >
+    <img src="image/143.jpeg" alt = "Eine detaillierte Datenbankstruktur mit Tabellen und Beziehungen zwischen ihnen, die als ER-Diagramm (Entity-Relationship-Diagramm) dargestellt ist, mit klaren Linien, die die Datenmodelle verbinden.3/4" >
+    <img src="image/144.jpeg" alt = "Eine detaillierte Datenbankstruktur mit Tabellen und Beziehungen zwischen ihnen, die als ER-Diagramm (Entity-Relationship-Diagramm) dargestellt ist, mit klaren Linien, die die Datenmodelle verbinden.4/4" >
+
+    <img src="image/129.jpeg" alt = "Die Tätigkeitsmodellierung erweist sich als ein entscheidendes Instrument, um komplexe Arbeitsprozesse in interdisziplinären Teams zu strukturieren und zu verstehen. In einem Team aus fünf Personen ist es von zentraler Bedeutung, die unterschiedlichen Fachbereiche effenziell zu interagieren. 1/4" />
+    <img src="image/130.jpeg" alt = "Die Tätigkeitsmodellierung erweist sich als ein entscheidendes Instrument, um komplexe Arbeitsprozesse in interdisziplinären Teams zu strukturieren und zu verstehen. In einem Team aus fünf Personen ist es von zentraler Bedeutung, die unterschiedlichen Fachbereiche effenziell zu interagieren. 2/4" />
+    <img src="image/131.jpeg" alt = "Die Tätigkeitsmodellierung erweist sich als ein entscheidendes Instrument, um komplexe Arbeitsprozesse in interdisziplinären Teams zu strukturieren und zu verstehen. In einem Team aus fünf Personen ist es von zentraler Bedeutung, die unterschiedlichen Fachbereiche effenziell zu interagieren. 3/4" />
+    <img src="image/132.jpeg" alt = "Die Tätigkeitsmodellierung erweist sich als ein entscheidendes Instrument, um komplexe Arbeitsprozesse in interdisziplinären Teams zu strukturieren und zu verstehen. In einem Team aus fünf Personen ist es von zentraler Bedeutung, die unterschiedlichen Fachbereiche effenziell zu interagieren. 4/4" />
+
+    <img src="image/133.jpeg" alt = "Der Raum wirkt einladend, hell und ruhig, ideal für das Lesen, Arbeiten oder Entspannen. Im Vordergrund befinden sich zwei auffällige, gelbe Sessel mit hoher Rückenlehne, die auf Teppichen platziert sind. Zwischen den Sesseln steht ein kleiner runder Beistelltisch. 1/4" />
+    <img src="image/134.jpeg" alt = "Der Raum wirkt einladend, hell und ruhig, ideal für das Lesen, Arbeiten oder Entspannen. Im Vordergrund befinden sich zwei auffällige, gelbe Sessel mit hoher Rückenlehne, die auf Teppichen platziert sind. Zwischen den Sesseln steht ein kleiner runder Beistelltisch. 2/4" />
+    <img src="image/135.jpeg" alt = "Der Raum wirkt einladend, hell und ruhig, ideal für das Lesen, Arbeiten oder Entspannen. Im Vordergrund befinden sich zwei auffällige, gelbe Sessel mit hoher Rückenlehne, die auf Teppichen platziert sind. Zwischen den Sesseln steht ein kleiner runder Beistelltisch. 3/4" />
+    <img src="image/136.jpeg" alt = "Der Raum wirkt einladend, hell und ruhig, ideal für das Lesen, Arbeiten oder Entspannen. Im Vordergrund befinden sich zwei auffällige, gelbe Sessel mit hoher Rückenlehne, die auf Teppichen platziert sind. Zwischen den Sesseln steht ein kleiner runder Beistelltisch. 4/4" />
+
+    <img src="image/137.jpeg" alt = "Der Raum ist von einem kräftigen Orangeton, der eine warme und energische Atmosphäre schafft. Dies zieht sich durch die Wände und Trennwände. Es gibt Einzelschreibtische mit orangefarbenen Sichtschutzwänden. Die Stühle sind ergonomisch gestaltet und schwarz/orange gestaltet. 1/4" />
+    <img src="image/138.jpeg" alt = "Der Raum ist von einem kräftigen Orangeton, der eine warme und energische Atmosphäre schafft. Dies zieht sich durch die Wände und Trennwände. Es gibt Einzelschreibtische mit orangefarbenen Sichtschutzwänden. Die Stühle sind ergonomisch gestaltet und schwarz/orange gestaltet. 2/4" />
+    <img src="image/139.jpeg" alt = "Der Raum ist von einem kräftigen Orangeton, der eine warme und energische Atmosphäre schafft. Dies zieht sich durch die Wände und Trennwände. Es gibt Einzelschreibtische mit orangefarbenen Sichtschutzwänden. Die Stühle sind ergonomisch gestaltet und schwarz/orange gestaltet. 3/4" />
+    <img src="image/140.jpeg" alt = "Der Raum ist von einem kräftigen Orangeton, der eine warme und energische Atmosphäre schafft. Dies zieht sich durch die Wände und Trennwände. Es gibt Einzelschreibtische mit orangefarbenen Sichtschutzwänden. Die Stühle sind ergonomisch gestaltet und schwarz/orange gestaltet. 4/4" />
+
+    <img src="image/154.jpeg" alt = "Boden: Ein grauer, weicher Fleeceteppich. Wände: Die untere Dreiviertelhöhe der Wände ist schwarz, der obere Bereich weiß. Box im Raum: Eine orangefarbene, gepolsterte Sitznische, bestehend aus zwei gegenüberliegenden Bänken. Möblierung innerhalb der Box: Heller Holztisch mit schwarzen Metallbeinen.  1/4" />
+    <img src="image/155.jpeg" alt = "Boden: Ein grauer, weicher Fleeceteppich. Wände: Die untere Dreiviertelhöhe der Wände ist schwarz, der obere Bereich weiß. Box im Raum: Eine orangefarbene, gepolsterte Sitznische, bestehend aus zwei gegenüberliegenden Bänken. Möblierung innerhalb der Box: Heller Holztisch mit schwarzen Metallbeinen.  2/4" />
+    <img src="image/156.jpeg" alt = "Boden: Ein grauer, weicher Fleeceteppich. Wände: Die untere Dreiviertelhöhe der Wände ist schwarz, der obere Bereich weiß. Box im Raum: Eine orangefarbene, gepolsterte Sitznische, bestehend aus zwei gegenüberliegenden Bänken. Möblierung innerhalb der Box: Heller Holztisch mit schwarzen Metallbeinen.  3/4" />
+    <img src="image/153.jpeg" alt = "Boden: Ein grauer, weicher Fleeceteppich. Wände: Die untere Dreiviertelhöhe der Wände ist schwarz, der obere Bereich weiß. Box im Raum: Eine orangefarbene, gepolsterte Sitznische, bestehend aus zwei gegenüberliegenden Bänken. Möblierung innerhalb der Box: Heller Holztisch mit schwarzen Metallbeinen.  4/4" />
+
+
+    <img src="image/49.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverläufen der TH Köln. 1/4" />
+    <img src="image/50.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverläufen der TH Köln. 2/4" />
+    <img src="image/51.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverläufen der TH Köln. 3/4" />
+    <img src="image/52.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverläufen der TH Köln. 4/4" />
+
+    <img src="image/53.jpeg" alt = "Mischung aus 2 symbolen : Geschleifte Klammern und Gamingconsolen, um den Begriff der Gamification bildlich zu erläutern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 1/4" />
+    <img src="image/54.jpeg" alt = "Mischung aus 2 symbolen : Geschleifte Klammern und Gamingconsolen, um den Begriff der Gamification bildlich zu erläutern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 2/4" />
+    <img src="image/55.jpeg" alt = "Mischung aus 2 symbolen : Geschleifte Klammern und Gamingconsolen, um den Begriff der Gamification bildlich zu erläutern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 3/4" />
+    <img src="image/56.jpeg" alt = "Mischung aus 2 symbolen : Geschleifte Klammern und Gamingconsolen, um den Begriff der Gamification bildlich zu erläutern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 4/4" />
+
+    <img src="image/57.jpeg" alt = "Nur 2 symbolen sollen gezeigt werden : Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 1/4" />
+    <img src="image/58.jpeg" alt = "Nur 2 symbolen sollen gezeigt werden : Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 2/4" />
+    <img src="image/59.jpeg" alt = "Nur 2 symbolen sollen gezeigt werden : Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 3/4" />
+    <img src="image/60.jpeg" alt = "Nur 2 symbolen sollen gezeigt werden : Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz. 4/4" />
+
+    <img src="image/61.jpeg" alt = "Offene und Geschlossene Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz und ist sind mit binären Zahelnsystem in weiß repräsentiert. 1/4" />
+    <img src="image/62.jpeg" alt = "Offene und Geschlossene Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz und ist sind mit binären Zahelnsystem in weiß repräsentiert. 2/4" />
+    <img src="image/63.jpeg" alt = "Offene und Geschlossene Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz und ist sind mit binären Zahelnsystem in weiß repräsentiert. 3/4" />
+    <img src="image/64.jpeg" alt = "Offene und Geschlossene Geschleifte Klammern und Gamingcontroller. Der Controller soll zentriert im Bild plaziert sein und um die Controller herum sind geschleifte Klammern. Die hintergrund farben sollen Orange, Rot , pink-lila und schwarz und ist sind mit binären Zahelnsystem in weiß repräsentiert. 4/4" />
+
+    <img src="image/65.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverlauf von rot, orange, pink und schwarz. 1/4" />
+    <img src="image/66.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverlauf von rot, orange, pink und schwarz. 2/4" />
+    <img src="image/67.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverlauf von rot, orange, pink und schwarz. 3/4" />
+    <img src="image/68.jpeg" alt = "Eine digitale Illustration eines Gaming-Controllers, platziert im unteren linken Drittel des Bildes, umgeben von Binärcode im Hintergrund, mit leuchtenden, diagonal verlaufenden Farbverlauf von rot, orange, pink und schwarz. 4/4" />
+
+    <img src="image/69.jpeg" alt = "Ein symbolisches Bild eines Laptops am oberen rechten Schnittpunkt eines Drittelregel-Rasters, mit schwebenden geschweiften Klammern und abstrakten Datenströmen darum herum. 1/4" />
+    <img src="image/70.jpeg" alt = "Ein symbolisches Bild eines Laptops am oberen rechten Schnittpunkt eines Drittelregel-Rasters, mit schwebenden geschweiften Klammern und abstrakten Datenströmen darum herum. 2/4" />
+    <img src="image/71.jpeg" alt = "Ein symbolisches Bild eines Laptops am oberen rechten Schnittpunkt eines Drittelregel-Rasters, mit schwebenden geschweiften Klammern und abstrakten Datenströmen darum herum. 3/4" />
+    <img src="image/72.jpeg" alt = "Ein symbolisches Bild eines Laptops am oberen rechten Schnittpunkt eines Drittelregel-Rasters, mit schwebenden geschweiften Klammern und abstrakten Datenströmen darum herum. 4/4" />
+
+</div>
+
+<script>
+    let currentIndex = 0;
+    const images = document.querySelectorAll(".gallery img");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const caption = document.getElementById("caption");
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.style.display = "flex";
+    }
+
+    function closeLightbox() {
+        lightbox.style.display = "none";
+    }
+
+    function changeImage(step) {
+        currentIndex = (currentIndex + step + images.length) % images.length;
+        updateLightbox();
+    }
+
+    function updateLightbox() {
+        lightboxImg.src = images[currentIndex].src;
+        caption.innerText = images[currentIndex].alt;
+    }
+
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+    }
+
+    // Schließt das Menü, wenn außerhalb geklickt wird
+    window.onclick = function(event) {
+        let menu = document.getElementById("menu");
+        let menuIcon = document.querySelector(".menu-icon");
+        if (event.target !== menu && event.target !== menuIcon && !menu.contains(event.target)) {
+            menu.classList.remove("active");
+        }
+    };
+
+</script>
+</body>
+</html>

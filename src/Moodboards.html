@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodboards</title>
+
+    <style>
+        body { font-family: "Calibri Light", sans-serif; text-align: center; margin: 0; color: black; padding: 70px; background: #333333}
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px}
+        .gallery img { width: 100%; cursor: pointer; border-radius: 5px; }
+
+        /* 🔹 Fixierter Header */
+        .header {
+            background: linear-gradient(to right, orange, red, purple, black);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 45px;
+            position: fixed; /* Header bleibt oben fixiert */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Höchste Priorität */
+        }
+
+
+        /* 🔹 Titel mittig */
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            flex-grow: 1; /* Damit er sich ausdehnt */
+            text-align: center;
+            margin-left: -40px; /* Damit es optisch wirklich mittig ist */
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Feste Breite */
+            height: 50px; /* Feste Höhe */
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+            padding-right: 20px;
+        }
+
+        .logo {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 🔹 Menü Overlay (jetzt fixiert und mit hoher Priorität) */
+        .menu-overlay {
+            position: fixed; /* Fixiert das Menü über dem gesamten Bildschirm */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Höchster Wert, damit es über allem liegt */
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .menu-overlay a:hover {
+            color: orange;
+        }
+
+        /* 🔹 Lightbox-Stil */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Dunkelgrauer transparenter Hintergrund */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        /* 🔹 Bild in der Lightbox */
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+
+        /* 🔹 Beschreibung neben dem Bild */
+        .lightbox .caption {
+            color: white;
+            font-size: 18px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* 🔹 Schließen-Button */
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 🔹 Navigation (Pfeile) */
+        .lightbox .prev, .lightbox .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .lightbox .prev { left: 20px; }
+        .lightbox .next { right: 20px; }
+
+        .lightbox .prev:hover, .lightbox .next:hover {
+            color: orange;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <span class="header-title">Moodboards</span>
+    <div class="logo">
+        <img src="image/logo.png" alt="Logo">
+    </div>
+</div>
+
+<!-- 🔹 Menü Overlay -->
+<div class="menu-overlay" id="menu">
+    <a href="Homepage.html">Startseite</a>
+    <a href="Informationsseite.html">Informationsseite</a>
+    <a href="Bildergalerie.html">Bildergalerie</a>
+    <a href="Moodboards.html">Moodboards</a>
+    <a href="ConceptMap.html">Concept Map</a>
+</div>
+
+<!--  Lightbox -->
+<div class="lightbox" id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+
+    <div class="lightbox-content">
+        <div class="caption" id="caption"></div>
+        <img id="lightbox-img" src="">
+    </div>
+
+    <span class="next" onclick="changeImage(1)">&#10095;</span>
+</div>
+
+<div class="gallery" id="gallery">
+    <!-- Bilder -->
+
+    <img src="image/m1.png" onclick="openLightbox(0)" alt="Hochschule 1"
+   <img src="image/m2.png" onclick="openLightbox(1)" alt="Hochschule 2">
+
+    <img src="image/m3.png" onclick="openLightbox(2)" alt="Hochschule 3">
+    <img src="image/m4.png" onclick="openLightbox(3)" alt="Hochschule 4">
+
+    <img src="image/m5.png" onclick="openLightbox(4)" alt="Hochschule 5">
+    <img src="image/m6.png" onclick="openLightbox(5)" alt="Hochschule 6">
+
+    <img src="image/m7.png" onclick="openLightbox(6)" alt="Hochschule 7">
+    <img src="image/m8.png" onclick="openLightbox(7)" alt="Hochschule 8">
+
+    <img src="image/m9.png" onclick="openLightbox(8)" alt="Hochschule 9">
+    <img src="image/m10.png" onclick="openLightbox(9)" alt="Hochschule 10">
+
+    <img src="image/m11.png" onclick="openLightbox(10)" alt="Hochschule 11">
+    <img src="image/m12.png" onclick="openLightbox(11)" alt="Hochschule 12">
+
+    <img src="image/m13.png" onclick="openLightbox(12)" alt="Hochschule 13">
+    <img src="image/m14.png" onclick="openLightbox(13)" alt="Hochschule 14">
+
+    <img src="image/m15.png" onclick="openLightbox(14)" alt="Hochschule 15">
+    <img src="image/m16.png" onclick="openLightbox(15)" alt="Hochschule 16">
+
+    <img src="image/m17.png" onclick="openLightbox(16)" alt="Hochschule 17">
+    <img src="image/m18.png" onclick="openLightbox(17)" alt="Hochschule 18">
+
+    <img src="image/m19.png" onclick="openLightbox(18)" alt="Hochschule 19">
+
+</div>
+
+<script>
+    let currentIndex = 0;
+    const images = document.querySelectorAll(".gallery img");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const caption = document.getElementById("caption");
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.style.display = "flex";
+    }
+
+    function closeLightbox() {
+        lightbox.style.display = "none";
+    }
+
+    function changeImage(step) {
+        currentIndex = (currentIndex + step + images.length) % images.length;
+        updateLightbox();
+    }
+
+    function updateLightbox() {
+        lightboxImg.src = images[currentIndex].src;
+        caption.innerText = images[currentIndex].alt;
+    }
+
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+    }
+
+    // Schließt das Menü, wenn außerhalb geklickt wird
+    window.onclick = function(event) {
+        let menu = document.getElementById("menu");
+        let menuIcon = document.querySelector(".menu-icon");
+        if (event.target !== menu && event.target !== menuIcon && !menu.contains(event.target)) {
+            menu.classList.remove("active");
+        }
+    };
+
+</script>
+</body>
+</html>

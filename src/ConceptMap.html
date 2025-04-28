@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept Map</title>
+    <style>
+        body {
+            background-color: #333333;
+            color: white;
+            font-family: "Calibri Light", sans-serif;
+            text-align: center;
+            padding: 70px;
+        }
+        .header {
+            background: linear-gradient(to right, orange, red, purple, black);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        /* 🔹 Titel mittig */
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            flex-grow: 1; /* Damit er sich ausdehnt */
+            text-align: center;
+            margin-left: -40px; /* Damit es optisch wirklich mittig ist */
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Feste Breite */
+            height: 50px; /* Feste Höhe */
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .container {
+            width: 87%;
+            margin: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section {
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            background-color: #444;
+            padding: 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .section.active h2 {
+            color:orange;
+            background-color: #444444;
+        }
+
+        .content {
+            display: none;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .box {
+            background-color: #444;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .large-image-box img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        /* Modal für Vollbildansicht */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu-overlay a {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .menu-overlay a:hover {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+    <span class="header-title">Concept Map</span>
+    <div class="logo">
+        <img src="image/logo.png" alt="Logo">
+    </div>
+</div>
+
+<!-- Menü Overlay -->
+<div class="menu-overlay" id="menu">
+    <a href="Homepage.html">Startseite</a>
+    <a href="Informationsseite.html">Informationsseite</a>
+    <a href="Bildergalerie.html">Bildergalerie</a>
+    <a href="Moodboards.html">Moodboards</a>
+    <a href="ConceptMap.html">Concept Map</a>
+</div>
+
+
+
+<div class="container">
+
+    <div class="section" onclick="toggleSection(this)">
+        <h2>Concept Map Versuch 1</h2>
+        <hr>
+        <div class="content">
+            <div class="box large-image-box">
+                <img src="image/Concept%20Map%20Versuch%201.png" alt="ConceptMap1" onclick="openModal(this)">
+            </div>
+            <div class="box large-text-box">
+                <p>In dieser ersten Version der Concept Map habe ich frei assoziiert und überlegt, welche Begriffe mir spontan zur Medieninformatik einfallen. Die Struktur war dabei noch offen, und es ging vor allem darum, erste Ideen zu sammeln und zu visualisieren.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" onclick="toggleSection(this)">
+        <h2>Concept Endresultat</h2>
+        <hr>
+        <div class="content">
+            <div class="box large-image-box">
+                <img src="image/Concept%20Map%20Endresultat.png" alt="ConceptMapEnd" onclick="openModal(this)">
+            </div>
+            <div class="box large-text-box">
+                <p>Die überarbeitete Version der Concept Map basiert auf einer klaren Strukturierung der Medieninformatik in die Kategorien: Grundkenntnisse, Vertiefung und Spezialisierung. In jeder dieser Kategorien sind die entsprechenden Fächer aufgeführt und durch Stichpunkte zu den zentralen Lerninhalten ergänzt.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal für Vollbildbild -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img id="modalImg">
+</div>
+
+<script>
+    function toggleSection(element) {
+        let content = element.querySelector('.content');
+        let isActive = element.classList.contains('active');
+
+        document.querySelectorAll('.section').forEach(sec => {
+            sec.classList.remove('active');
+            sec.querySelector('.content').style.display = 'none';
+        });
+
+        if (!isActive) {
+            element.classList.add('active');
+            content.style.display = 'block';
+        }
+    }
+
+    function openModal(img) {
+        let modal = document.getElementById('imageModal');
+        let modalImg = document.getElementById('modalImg');
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = "none";
+    }
+
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.classList.toggle("active");
+    }
+</script>
+</body>
+</html>
